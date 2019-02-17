@@ -64,22 +64,22 @@
                 <configuration>
                     <proguardVersion>6.0.3</proguardVersion>
                     <obfuscate>true</obfuscate>
-                    <outjar>l01-obfuscation.jar</outjar>
-                    <!--
-                    <archive>
-                        <manifest>
-                            <mainClass>Main</mainClass>
-                        </manifest>
-                    </archive>
-                    -->
+                    <injar>L01-1.1.jar</injar>
+                    <outjar>L01-obfuscation.jar</outjar>
                     <options>
-                        <option>-keep public class Main {public static void main(java.lang.String[]);}</option>
+                        <option>-keep public class ru.otus.l01.Main {public static void main(java.lang.String[]);}</option>
                         <option>-dontwarn</option>
                     </options>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                         <lib>${java.home}/lib/jce.jar</lib>
                     </libs>
+                    <archive>
+                        <manifest>
+                            <mainClass>Main</mainClass>
+                        </manifest>
+                    </archive>
+
                 </configuration>
             </plugin>
 

@@ -33,7 +33,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>ru.otus.l01.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -3,9 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>l01</name>
+    <name>L01</name>
     <description>Working with maven</description>
-    <groupId>ru.otus.java</groupId>
     <artifactId>L01</artifactId>
     <version>1.0</version>
     <build>
@@ -41,5 +40,12 @@
             <version>23.0</version>
         </dependency>
     </dependencies>
+
+    <parent>
+        <groupId>ru.otus.java</groupId>
+        <artifactId>java</artifactId>
+        <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
 </project>

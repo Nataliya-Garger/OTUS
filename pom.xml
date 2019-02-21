@@ -13,7 +13,7 @@
         <repository>
             <id>maven-central-repo</id>
             <name>maven-central</name>
-            <url>http://nexus.tcsbank.ru/content/repositories/central/</url>
+            <url>http://nexus.tcsbank.ru/content/repositories/central</url>
         </repository>
     </repositories>
 

@@ -1,8 +1,6 @@
 package ru.otus.l02;
 
 
-import com.sun.org.apache.xpath.internal.operations.String;
-
 public class ObjectFactory {
     public static Object createObject(ObjectType objectType) {
         switch (objectType) {

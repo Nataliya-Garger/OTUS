@@ -8,6 +8,7 @@
     <name>module_project</name>
     <modules>
         <module>L01</module>
+        <module>L02</module>
     </modules>
     <repositories>
         <repository>

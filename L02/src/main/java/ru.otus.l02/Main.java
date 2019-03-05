@@ -4,24 +4,19 @@ import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 
 public class Main {
     private static int count = 1_000_000;
+//    private static ObjectType objectType = ObjectType.STRING;
+    private static ObjectType objectType = ObjectType.INTEGR;
+//    private static ObjectType objectType = ObjectType.LONG;
+//    private static ObjectType objectType = ObjectType.CHARACTER;
+//    private static ObjectType objectType = ObjectType.DOUBLE;
+
 
     public static void main(String[] args) throws Exception {
-        System.out.println("ObjectSizeCalculator = " + ObjectSizeCalculator.getObjectSize(ObjectFactory.createObject(ObjectType.STRING)));
 
-        long startMemory = getSize();
-        Object[] array = new Object[count];
-        for (int j = 0; j < count; j++) {
-            array[j] = ObjectFactory.createObject(ObjectType.STRING);
-        }
-        long endMemory = getSize();
-        System.out.println("CustomCalculator = " + (endMemory-startMemory)/count);
+        System.out.println("ObjectSizeCalculator = " + ObjectSizeCalculator.getObjectSize(ObjectFactory.createObject(objectType)));
+        System.out.println("CustomCalculator = " + MeasureObject.getObjectSize(objectType, count));
 
     }
 
-    private static long getSize () throws InterruptedException {
-        System.gc();
-        Thread.sleep(10);
-        Runtime runtime = Runtime.getRuntime();
-        return runtime.totalMemory() - runtime.freeMemory();
-    }
+
 }

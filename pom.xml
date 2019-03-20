@@ -9,7 +9,6 @@
     <modules>
         <module>L01</module>
         <module>L02</module>
-        <module>L03</module>
     </modules>
     <repositories>
         <repository>

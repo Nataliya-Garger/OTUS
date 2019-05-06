@@ -65,9 +65,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public ListIterator listIterator(int index) {
-        if (index > size || index < 0)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-
+        rangeCheck(index);
         return new MyListMyIterator(index);
     }
 
@@ -105,8 +103,7 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public void add(int index, E element) {
-        if (index > size || index < 0)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        rangeCheckForAdd(index);
         final int s;
         Object[] elementData;
         if ((s = size) == (elementData = this.elementData).length)
@@ -120,45 +117,40 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        if (o == null) {
-            for (int index = 0; index < size; index++)
-                if (elementData[index] == null) {
-                    removeFromIndex(index);
-                    return true;
-                }
-        } else {
-            for (int index = 0; index < size; index++)
-                if (o.equals(elementData[index])) {
-                    removeFromIndex(index);
-                    return true;
-                }
+        for (int index = 0; index < size; index++) {
+            if ((o == null && elementData[index] == null)
+                    || (o != null && o.equals(elementData[index]))) {
+                removeFromIndex(index);
+                return true;
+            }
         }
         return false;
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> collection) {
-        if (index > size || index < 0)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-
-        Object[] cArray = collection.toArray();
-        int cArrayLength = cArray.length;
-        if (cArrayLength == 0)
+        if (collection == null) {
             return false;
-        Object[] elementData = this.elementData;
-        final int s = size;
-        if (cArrayLength > elementData.length - s)
-            elementData = grow(s + cArrayLength);
+        }
 
-        int numMoved = s - index;
-        if (numMoved > 0)
-            System.arraycopy(elementData, index,
-                    elementData, index + cArrayLength,
-                    numMoved);
-        System.arraycopy(cArray, 0, elementData, index, cArrayLength);
-        size = s + cArrayLength;
+        rangeCheckForAdd(index);
+
+        if (elementData.length - size < collection.size()) {
+            grow(size + collection.size());
+        }
+
+        for (int i = size() + collection.size() - 1; i > size(); i--) {
+            elementData[i] = elementData[i - collection.size()];
+        }
+
+        for (E item : collection) {
+            elementData[index] = item;
+            index++;
+            size++;
+        }
         return true;
     }
+
 
     @Override
     public boolean addAll(Collection collection) {
@@ -189,14 +181,14 @@ public class MyArrayList<E> implements List<E> {
     @Override
     @SuppressWarnings("unchecked")
     public E get(int index) {
-        checkIndex(index, size);
+        rangeCheck(index);
         return (E) elementData[index];
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public E set(int index, E element) {
-        checkIndex(index, size);
+        rangeCheck(index);
         E oldValue = (E) elementData[index];
         elementData[index] = element;
         return oldValue;
@@ -205,7 +197,7 @@ public class MyArrayList<E> implements List<E> {
     @Override
     @SuppressWarnings("unchecked")
     public E remove(int index) {
-        checkIndex(index, size);
+        rangeCheck(index);
         E oldValue = (E) elementData[index];
 
         int numMoved = size - index - 1;
@@ -219,32 +211,21 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public int indexOf(Object o) {
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null)
-                    return i;
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i].equals(o))
-                    return i;
-            }
+        for (int i = 0; i < size; i++) {
+            if ((o == null && elementData[i] == null)
+                    || (o != null && elementData[i].equals(o)))
+                return i;
         }
         return -1;
     }
 
+
     @Override
     public int lastIndexOf(Object o) {
-        if (o == null) {
-            for (int i = size - 1; i >= 0; i--) {
-                if (elementData[i] == null)
-                    return i;
-            }
-        } else {
-            for (int i = size - 1; i >= 0; i--) {
-                if (elementData[i].equals(o))
-                    return i;
-            }
+        for (int i = size - 1; i >= 0; i--) {
+            if ((o == null && elementData[i] == null)
+                    || (o != null && elementData[i].equals(o)))
+                return i;
         }
         return -1;
     }
@@ -274,7 +255,7 @@ public class MyArrayList<E> implements List<E> {
 
     private void removeFromIndex(int index) {
         int count = size - index - 1;
-        if (count > 0) {
+        if (count >= 0) {
             System.arraycopy(elementData, index + 1, elementData, index, count);
             elementData[--size] = null;
         }
@@ -297,7 +278,7 @@ public class MyArrayList<E> implements List<E> {
                 throw new OutOfMemoryError();
             return minCapacity;
         }
-        return (newCapacity - (Integer.MAX_VALUE - 8) <= 0)
+        return (newCapacity - (MAX_ELEMENTS_SIZE) <= 0)
                 ? newCapacity
                 : hugeCapacity(minCapacity);
     }
@@ -312,9 +293,18 @@ public class MyArrayList<E> implements List<E> {
     }
 
 
-    private void checkIndex(int index, int length) {
-        if (index < 0 || index >= length)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    private void rangeCheckForAdd(int index) {
+        if (index < 0 || index >= size)
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+
+    private void rangeCheck(int index) {
+        if (index >= size)
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + ", Size: " + size;
     }
 
 
@@ -438,6 +428,7 @@ public class MyArrayList<E> implements List<E> {
                 throw new ConcurrentModificationException();
             }
         }
+
 
         @Override
         public void add(E e) {

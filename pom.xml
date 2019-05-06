@@ -9,6 +9,8 @@
     <modules>
         <module>L01</module>
         <module>L02</module>
+        <module>L03</module>
+        <module>L04</module>
     </modules>
     <repositories>
         <repository>
